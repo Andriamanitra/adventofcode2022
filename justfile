@@ -12,6 +12,9 @@ make-day NUM:
         -H "Cookie: $AOC_COOKIE" \
         --output "day$ZNUM/input.txt"
 
-solve NUM:
+@solve NUM:
     -just make-day {{NUM}}
-    micro $(printf "day%02d/solution.rb" {{NUM}}):6:42
+    micro \
+        $(printf "day%02d/solution.rb:6:42" {{NUM}}) \
+        $(printf "day%02d/input.txt" {{NUM}}) \
+        $(printf "day%02d/example.txt" {{NUM}})

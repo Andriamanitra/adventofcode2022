@@ -39,14 +39,31 @@ class AdventOfCode
     $0.sub('solution.rb', 'input.txt')
   end
 
+  def self.example_file
+    $0.sub('solution.rb', 'example.txt')
+  end
+
   def self.run
+    if File.exists?(example_file)
+      example_input = take_input(File.read(example_file))
+    else
+      example_input = ""
+    end
+
     ARGV.replace([default_input_file]) if ARGV.empty?
     raw_input = ARGF.read
     input = take_input(raw_input)
+
     @@parts.each do |part_name, solve|
       puts "#{self.name} part #{part_name}:".magenta
-      answer = solve[input]
-      puts "#{answer}".white
+      if example_input.empty?
+        answer = solve[input]
+        puts "#{answer}".white
+      else
+        example_ans = "(example: #{solve[example_input]})"
+        answer = solve[input]
+        puts "#{answer}  #{example_ans.bright_black}".white
+      end
     end
   end
 end
