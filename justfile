@@ -14,4 +14,4 @@ make-day NUM:
 
 solve NUM:
     -just make-day {{NUM}}
-    micro $(printf "day%02d/solution.rb" {{NUM}}):10:42
+    micro $(printf "day%02d/solution.rb" {{NUM}}):6:42
