@@ -1,4 +1,4 @@
-## My solutions to [Advent of Code](https://adventofcode.com) [2022](https://adventofcode.com/2022/)
+# My solutions to [Advent of Code](https://adventofcode.com) [2022](https://adventofcode.com/2022/)
 
 I am mostly using Ruby this year. The primary solution for each day will be
 in a file called `solution.rb` inside the directory for that day. These
@@ -10,7 +10,9 @@ if it exists) file, running the solution, and printing/formatting the output.
 Some days may include additional implementations in other languages such as
 Haskell or whatever else I felt like writing that day.
 
-Previous years:
+
+
+## Previous years:
 
 * [2017](https://github.com/Andriamanitra/adventofcode2017) (different language every day)
 * [2018](https://github.com/Andriamanitra/adventofcode2018) (various languages)
