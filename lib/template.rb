@@ -1,6 +1,5 @@
 require_relative '../lib/base.rb'
 
-
 class Day00 < AdventOfCode
   def self.take_input(s)
     s

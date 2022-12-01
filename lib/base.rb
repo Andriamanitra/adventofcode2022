@@ -47,7 +47,7 @@ class AdventOfCode
     if File.exists?(example_file)
       example_input = take_input(File.read(example_file))
     else
-      example_input = ""
+      example_input = ''
     end
 
     ARGV.replace([default_input_file]) if ARGV.empty?
