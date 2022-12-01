@@ -13,6 +13,9 @@ make-day NUM:
         -H "Cookie: $AOC_COOKIE" \
         --output "day$ZNUM/input.txt"
 
+@run-day NUM:
+    ruby $(printf "day%02d/solution.rb" {{NUM}})
+
 @solve NUM:
     -just make-day {{NUM}}
     micro \
