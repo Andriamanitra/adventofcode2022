@@ -7,6 +7,7 @@ make-day NUM:
     mkdir day$ZNUM
     sed "s/00/$ZNUM/g" 'lib/template.rb' > "day$ZNUM/solution.rb"
     curl "https://adventofcode.com/$YEAR/day/{{NUM}}/input" \
+        --user-agent "curl from https://github.com/andriamanitra/adventofcode2022/blob/main/justfile" \
         --no-progress-meter \
         -H 'Accept: text/plain' \
         -H "Cookie: $AOC_COOKIE" \
