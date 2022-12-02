@@ -1,4 +1,5 @@
-import Data.List (findIndex, sort)
+import Data.List (findIndex, sortOn)
+import Data.Ord
 
 splitOn :: Eq a => a -> [a] -> [[a]]
 splitOn sep xs =
@@ -17,4 +18,4 @@ main = do
     print $ maximum $ map sum chunks
 
     -- Part 2: sum of the largest 3 chunk sums
-    print $ sum $ take 3 $ reverse $ sort $ map sum chunks
+    print $ sum $ take 3 $ sortOn Down $ map sum chunks
