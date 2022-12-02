@@ -17,11 +17,6 @@ readStrategy "Y" = Draw
 readStrategy "Z" = Win
 readStrategy _ = error "Invalid strategy"
 
-score :: BattleOutcome -> Int
-score Lose = 0
-score Draw = 3
-score Win = 6
-
 value :: RockPaperScissors -> Int
 value Rock     = 1
 value Paper    = 2
