@@ -21,6 +21,14 @@ end
 class String
   include Enumerable
 
+  def lower?
+    self.upcase != self && self.downcase == self
+  end
+
+  def upper?
+    self.downcase != self && self.upcase == self
+  end
+
   def each(&block)
     self.chars.each do |ch|
       block.call(ch)
@@ -41,6 +49,11 @@ class AdventOfCode
 
   def self.example_file
     $0.sub('solution.rb', 'example.txt')
+  end
+
+  def self.solve_part(id, input_str)
+    input = self.take_input(input_str)
+    @@parts[id][input]
   end
 
   def self.run
