@@ -10,7 +10,7 @@ class Day04 < AdventOfCode
 
   part(1) do |input|
     input.count do |a, b|
-      b === a.begin && b === a.end || a === b.begin && a === b.end
+      a.cover?(b) || b.cover?(a)
     end
   end
 
