@@ -16,7 +16,7 @@ class Day04 < AdventOfCode
 
   part(2) do |input|
     input.count do |a, b|
-      a === b.begin || a === b.end || b === a.begin || b === a.end
+      !(a.end < b.begin || b.end < a.begin)
     end
   end
 end
