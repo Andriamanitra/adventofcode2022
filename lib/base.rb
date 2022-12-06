@@ -30,7 +30,7 @@ class String
   end
 
   def each(&block)
-    self.chars.each do |ch|
+    self.each_char do |ch|
       block.call(ch)
     end
   end
