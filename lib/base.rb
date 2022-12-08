@@ -1,5 +1,6 @@
 require_relative 'colorize.rb'
 
+require 'benchmark'
 require 'prime'
 require 'set'
 require 'matrix'
@@ -69,14 +70,17 @@ class AdventOfCode
 
     @@parts.each do |part_name, solve|
       puts "#{self.name} part #{part_name}:".magenta
-      if example_input.empty?
-        answer = solve[input]
-        puts "#{answer}".white
-      else
-        example_ans = "(example: #{solve[example_input]})"
-        answer = solve[input]
-        puts "#{answer}  #{example_ans.bright_black}".white
-      end
+      time_taken = Benchmark.realtime {
+        if example_input.empty?
+          answer = solve[input]
+          print "#{answer}".white
+        else
+          example_ans = "(example: #{solve[example_input]})"
+          answer = solve[input]
+          print "#{answer}  #{example_ans.bright_black}".white
+        end
+      }
+      puts " – took #{(1000 * time_taken).round(3)} milliseconds".bright_black
     end
   end
 end
