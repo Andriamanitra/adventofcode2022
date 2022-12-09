@@ -29,4 +29,17 @@ class String
     end
     "\e[38;2;#{r};#{g};#{b}m#{self}\e[0m"
   end
+  def rgb_bg(*args)
+    if args.length == 1
+      num = args[0].to_i
+      r = num >> 16 & 0xFF
+      g = num >> 8  & 0xFF
+      b = num >> 0  & 0xFF
+    elsif args.length == 3
+      r, g, b = args.map{_1.to_i.clamp(0..255)}
+    else
+      raise ArgumentError.new("wrong number of arguments (given #{args.size}, expected 1 or 3)")
+    end
+    "\e[48;2;#{r};#{g};#{b}m#{self}\e[0m"
+  end
 end
