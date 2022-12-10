@@ -1,61 +1,61 @@
 require_relative '../lib/base.rb'
 
-class Day10 < AdventOfCode
-  def self.take_input(s)
-    s.lines.map(&:split)
+class Cpu
+  def initialize(x, &block)
+    @x = x
+    @cycle = 0
+    @on_step_fn = block
   end
 
-  part(1) do |input|
-    x = 1
-    cycle = 0
+  def execute(instruction)
+    case instruction.split
+    in ["addx", num]
+      step
+      step
+      @x += num.to_i
+    in ["noop"]
+      step
+    end
+  end
+
+  def step
+    @cycle += 1
+    @on_step_fn.call(@x, @cycle)
+  end
+end
+
+
+class Day10 < AdventOfCode
+  def self.take_input(s)
+    s.lines(chomp: true)
+  end
+
+  part(1) do |instructions|
     total = 0
     stops = [20, 60, 100, 140, 180, 220]
-    input.each do |a|
-      if a[0] == "addx"
-        cycle += 2
-        if cycle >= stops[0]
-          total += stops.shift * x
-          break if stops.empty?
-        end
-        x += a[1].to_i
-      else
-        cycle += 1
-      end
+    instructions = instructions.each
 
-      if cycle >= stops[0]
-        total += stops.shift * x
-        break if stops.empty?
+    cpu = Cpu.new(1) do |x, cycle_number|
+      if stops[0] == cycle_number
+        total += cycle_number * x
+        stops.shift
       end
     end
+
+    cpu.execute(instructions.next) until stops.empty?
     total
   end
 
-  part(2) do |input|
-    x = 1
+  part(2) do |instructions|
     width = 40
-    height = 6
-    screen = Array.new(height){' ' * width}
-    cycle = 0
-    i = 0
-    waiting = false
-    height.times do |r|
-      width.times do |w|
-        screen[r][w] = (x-1..x+1) === w ? '█' : '.'
-        cycle += 1
-        
-        if input[i][0] == "addx"
-          if waiting
-            waiting = false
-            x += input[i][1].to_i
-            i += 1
-          else
-            waiting = true
-          end
-        else
-          i += 1
-        end
-      end
+    screen = Array.new(6) { ' ' * width }
+
+    cpu = Cpu.new(1) do |x, cycle_number|
+      r, c = (cycle_number - 1).divmod(width)
+      screen[r][c] = c.between?(x-1, x+1) ? '█' : '.'
     end
+
+    instructions.each { |line| cpu.execute(line) }
     screen.join("\n")
   end
 end
