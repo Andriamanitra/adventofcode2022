@@ -1,3 +1,6 @@
+from collections import defaultdict
+
+
 def main(lines: list[str]) -> None:
     workdir = ["/"]
 
@@ -5,7 +8,7 @@ def main(lines: list[str]) -> None:
     # names) to its total size (including sizes of subdirectories)
     # we use tuples as the keys because Python requires dictionary keys
     # to be hashable (strings would also work, but lists are not hashable)
-    dir_sizes = {tuple(workdir): 0}
+    dir_sizes = defaultdict(int)
 
     for line in lines:
         words = line.split()
@@ -26,10 +29,7 @@ def main(lines: list[str]) -> None:
             # add current file size to current workdir *and all its parents*
             for i in range(len(workdir)):
                 directory = tuple(workdir[:i+1])
-                if directory not in dir_sizes:
-                    dir_sizes[directory] = file_size
-                else:
-                    dir_sizes[directory] += file_size
+                dir_sizes[directory] += file_size
 
     #  Part 1
     # ========
