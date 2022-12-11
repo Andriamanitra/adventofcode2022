@@ -23,7 +23,7 @@ class Monkey
   def take_turn(worry_divisor, &block)
     until @items.empty?
       @num_inspected += 1
-      worry = @op[@items.shift]
+      worry = @op[@items.shift] / worry_divisor
       if worry % @modulo == 0
         block.call(worry, @true_throw_to)
       else
