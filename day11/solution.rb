@@ -4,7 +4,16 @@ class Monkey
   def initialize(a, b, c, d, e, f)
     @num = a.split[1].to_i
     @items = b.split[2..].map(&:to_i)
-    @op = c.split('new = ')[1]
+    @op =
+      case c.split('new = ')[1].split
+      in ["old", "*", "old"] then ->(x){x * x}
+      in ["old", "*", v]
+        val = v.to_i
+        ->(x){x * val}
+      in ["old", "+", v]
+        val = v.to_i
+        ->(x){x + val}
+      end
     @modulo = d[/\d+/].to_i
     @true_throw_to = e[/\d+/].to_i
     @false_throw_to = f[/\d+/].to_i
@@ -13,9 +22,8 @@ class Monkey
 
   def take_turn(worry_divisor, &block)
     until @items.empty?
-      old = @items.shift
       @num_inspected += 1
-      worry = eval(@op) / worry_divisor
+      worry = @op[@items.shift]
       if worry % @modulo == 0
         block.call(worry, @true_throw_to)
       else
