@@ -1,8 +1,9 @@
 require_relative '../lib/base.rb'
+require 'json'
 
 class Day13 < AdventOfCode
   def self.take_input(s)
-    s.lines(chomp: true).reject(&:empty?).map { eval(_1) }
+    s.lines(chomp: true).reject(&:empty?).map { JSON.load(_1) }
   end
 
   def self.compare(a, b)
