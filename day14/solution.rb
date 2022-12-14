@@ -82,23 +82,32 @@ class Day14 < AdventOfCode
   end
 
   part(2) do |input|
-    src = 500
-    columns = build_map(input)
-
-    floor_level = 2 + columns.values.max_by(&:max).max
-
-    # the floor is infinite but we only need a part of it that
-    # is large enough to support a pile to get to the top
-    (src - floor_level..src + floor_level).each do |c|
-      columns[c].add(floor_level)
+    obstacles = Set[]
+    lowest = 0
+    input.each do |points|
+      points.each_cons(2) do |(ac, ar), (bc, br)|
+        ac, bc = [ac, bc].minmax
+        ar, br = [ar, br].minmax
+        lowest = br if br > lowest
+        if ac == bc
+          (ar..br).each{|r| obstacles.add([r, ac]) }
+        elsif ar == br
+          (ac..bc).each{|c| obstacles.add([ar, c]) }
+        end
+      end
     end
-
+    q = [[0, 500]]
     total = 0
-    while pos = fall(columns, src, columns[src].min - 1)
-      sandc, sandr = pos
+    until q.empty?
+      r, c = q.shift
       total += 1
-      break if sandc == 500 && sandr == 0
-      columns[sandc].add(sandr)
+      next if r > lowest
+      down = [r+1, c]
+      downleft = [r+1, c-1]
+      downright = [r+1, c+1]
+      q << down if obstacles.add?(down)
+      q << downleft if obstacles.add?(downleft)
+      q << downright if obstacles.add?(downright)
     end
     total
   end
