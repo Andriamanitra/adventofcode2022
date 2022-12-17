@@ -70,15 +70,18 @@ class Day16 < AdventOfCode
 
     distance_between = distances(map)
 
+    # exclude useless valves from consideration
     useful_valves = flows.keys.select{|k| flows[k] > 0}.to_set
 
     # first calculate all paths i could take
-    scores = []
+    # keep track of best score for each set of opened valves
+    scores = Hash.new(0)
     q = [['AA', useful_valves, 26, 0]]
 
     until q.empty?
       me, closed_valves, t, score = q.shift
-      scores << [useful_valves.difference(closed_valves), score]
+      opened = useful_valves.difference(closed_valves)
+      scores[opened] = score if score > scores[opened]
       closed_valves.each do |valve|
         dist = distance_between[me+valve]
         if dist < t - 1
@@ -90,23 +93,23 @@ class Day16 < AdventOfCode
     end
 
     # now find the pair of non-overlapping solutions that has the highest score
-    scores.sort_by! { |_, score| -score }
-    i = 0
-    best = scores[0][1] # score if elephant did nothing at all!
 
-    while i < scores.size
-      opened_by_me, my_score = scores[i]
-      (i+1...scores.size).each do |j|
-        opened_by_ele, ele_score = scores[j]
-        total_score = my_score + ele_score
+    # sorting the scores allows us to exit early
+    sorted_scores = scores.sort_by { |_opened, score| -score }
+
+    best = sorted_scores[0][1] # score if elephant did nothing at all!
+
+    sorted_scores.each_with_index do |(opened, score), i|
+      (i+1...sorted_scores.size).each do |j|
+        opened_by_ele, ele_score = sorted_scores[j]
+        total_score = score + ele_score
 
         break if total_score < best
 
-        if opened_by_me.disjoint?(opened_by_ele)
+        if opened.disjoint?(opened_by_ele)
           best = total_score
         end
       end
-      i += 1
     end
 
     best
