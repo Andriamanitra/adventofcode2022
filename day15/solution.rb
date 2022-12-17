@@ -58,36 +58,49 @@ class Day15 < AdventOfCode
 
     # because we know there exists only one solution in the entire area,
     # it must be true that it is located just outside the range of at
-    # least one of the sensors
-    diags = []
+    # least two of the sensors (assuming it's not in the corner)
+    # => only need to check intersections of the diagonals that limit
+    #    the area around each sensor
+    diags_se = []
+    diags_ne = []
     sensors = []
     input.each do |sx, sy, bx, by|
       manhattan = (bx - sx).abs + (by - sy).abs
       range = manhattan
-      ne = [sx, sy - range + 1, +1, +1, range + 1]
-      se = [sx + range + 1, sy, -1, +1, range + 1]
-      sw = [sx, sy + range + 1, -1, -1, range + 1]
-      nw = [sx - range + 1, sy, +1, -1, range + 1]
-      diags << ne << se << sw << nw
+      diags_se << sx + sy + (range + 1) << sx + sy - (range + 1)
+      diags_ne << sx - sy + (range + 1) << sx - sy - (range + 1)
       sensors << [sx, sy, range]
     end
+
+
     result = nil
-    catch (:found) do
-      diags.each do |ax, ay, dx, dy, len|
-        len.times do |i|
-          x = ax + dx * i
-          y = ay + dy * i
-          if (
-              min_pos <= x && x <= max_pos &&
-              min_pos <= y && y <= max_pos &&
-              sensors.all? { |sx, sy, range| (sx - x).abs + (sy - y).abs > range }
-          )
-            result = 4_000_000 * x + y
-            throw :found
-          end
+    diags_se.product(diags_ne) do |se, ne|
+      # diagonals don't intersect if their parity doesn't match
+      next if se % 2 != ne % 2
+
+      y = (se - ne) / 2
+      x = se - y
+      if (
+          min_pos <= x && x <= max_pos &&
+          min_pos <= y && y <= max_pos &&
+          sensors.all? { |sx, sy, range| (sx - x).abs + (sy - y).abs > range }
+      )
+        result = 4_000_000 * x + y
+        break
+      end
+    end
+
+    # the given inputs probably never touch this edge case but in theory
+    # the answer could be only on one diagonal if it's in the corner
+    if result.nil?
+      [[min_pos, max_pos], [max_pos, max_pos],
+       [min_pos, min_pos], [max_pos, min_pos]].each do |x,y|
+        if sensors.all? { |sx, sy, range| (sx - x).abs + (sy - y).abs > range }
+          result = 4_000_000 * x + y
         end
       end
     end
+
     result
   end
 end
