@@ -58,7 +58,7 @@ class AdventOfCode
   end
 
   def self.run
-    if File.exists?(example_file)
+    if File.exist?(example_file)
       example_input = take_input(File.read(example_file))
     else
       example_input = ''
